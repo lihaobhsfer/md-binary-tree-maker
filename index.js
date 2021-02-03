@@ -32,6 +32,10 @@ const buildTree = (arr) => {
   function helper(index) {
     if (index >= arr.length) return null;
     if (arr[index] === "null") {
+      let leftChildIndex = 2 * index + 1;
+      let rightChildIndex = 2 * index + 2;
+      arr.splice(leftChildIndex, 0, "null");
+      arr.splice(rightChildIndex, 0, "null");
       return null;
     }
 
@@ -140,6 +144,9 @@ const buildTree = (arr) => {
         lines[i][j] = "";
       }
     }
+  }
+  if (lines.length === 0) {
+    lines = m;
   }
 
   let res = "";
