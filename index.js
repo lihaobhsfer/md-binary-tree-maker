@@ -1,3 +1,5 @@
+const MARGIN = 1;
+const trimSpaces = true;
 const makeTree = () => {
   let arr = document.querySelector("#tree-input").value;
   if (!arr) {
@@ -70,7 +72,7 @@ const buildTree = (arr) => {
   for (let i = 0; i < h; i++) {
     m[i] = [];
     for (let j = 0; j < w; j++) {
-      m[i][j] = " ".repeat(maxLength);
+      m[i][j] = " ".repeat(maxLength + 2 * MARGIN);
     }
   }
 
@@ -84,7 +86,9 @@ const buildTree = (arr) => {
       if (isLeft) rightPadding++;
       else leftPadding++;
     }
-    return " ".repeat(leftPadding) + val + " ".repeat(rightPadding);
+    return (
+      " ".repeat(leftPadding + MARGIN) + val + " ".repeat(rightPadding + MARGIN)
+    );
   }
 
   function getLine(char, maxLength) {
@@ -100,7 +104,11 @@ const buildTree = (arr) => {
       if (char === "/") leftPadding++;
       else rightPadding++;
     }
-    return " ".repeat(leftPadding) + char + " ".repeat(rightPadding);
+    return (
+      " ".repeat(leftPadding + MARGIN) +
+      char +
+      " ".repeat(rightPadding + MARGIN)
+    );
   }
 
   function dfs(level, n, l, r, isLeft) {
@@ -129,22 +137,24 @@ const buildTree = (arr) => {
   dfs(0, tree, 0, m[0].length, false);
 
   let lines = [];
-
-  for (line of m) {
-    lines.push(line.toString().replaceAll(",", ",").split(""));
-  }
-
-  for (let j = 0; j < lines[0].length; j++) {
-    let allEmpty = true;
-    for (let i = 0; i < lines.length; i++) {
-      if (lines[i][j] !== " ") allEmpty = false;
+  if (trimSpaces) {
+    for (line of m) {
+      lines.push(line.toString().replaceAll(",", ",").split(""));
     }
-    if (allEmpty) {
-      for (let i = 0; i < m.length; i++) {
-        lines[i][j] = "";
+
+    for (let j = 0; j < lines[0].length; j++) {
+      let allEmpty = true;
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i][j] !== " ") allEmpty = false;
+      }
+      if (allEmpty) {
+        for (let i = 0; i < m.length; i++) {
+          lines[i][j] = "";
+        }
       }
     }
   }
+
   if (lines.length === 0) {
     lines = m;
   }
