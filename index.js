@@ -4,9 +4,9 @@ const makeTree = () => {
   let arr = document.querySelector("#tree-input").value;
   if (!arr) {
     // arr = "1,2,3,4,5,6,7,8";
-    // arr = "[5,4,8,11,null,13,4,7,2,null,null,5,1]";
+    arr = "[5,4,8,11,null,13,4,7,2,null,null,5,1]";
 
-    arr = "1,22,3,4,5,6,77,8,9,1,2,3,4,5,6,7,8888,9,1,2,3,4,5,6,7,8,9";
+    // arr = "1,22,3,4,5,6,77,8,9,1,2,3,4,5,6,7,8888,9,1,2,3,4,5,6,7,8,9";
   }
 
   let treeVisualization = document.querySelector("#tree");
@@ -15,12 +15,15 @@ const makeTree = () => {
     .replaceAll("[", "")
     .replaceAll("]", "")
     .replaceAll(" ", "")
+    .replaceAll('"', "")
     .split(",");
 
   text = buildTree(arr);
 
   treeVisualization.innerHTML = "<pre>" + text + "</pre>";
 };
+
+// first convert arr into a complete tree representation, then build tree
 
 const buildTree = (arr) => {
   let lengths = arr.filter((i) => i !== "null").map((i) => i.length);
@@ -29,20 +32,41 @@ const buildTree = (arr) => {
 
   console.log(arr);
 
+  let i = 0;
+  let l = arr.length;
+  while (i < l) {
+    if (arr[i] !== "null") {
+      i++;
+    } else {
+      let leftChildIndex = 2 * i + 1;
+      let rightChildIndex = 2 * i + 2;
+      if (leftChildIndex <= l + 2 && rightChildIndex <= l + 2) {
+        arr.splice(leftChildIndex, 0, "null");
+        arr.splice(rightChildIndex, 0, "null");
+        l += 2;
+      }
+      i++;
+    }
+  }
+
+  console.log(arr.length);
   const tree = helper(0);
 
   function helper(index) {
     if (index >= arr.length) return null;
     if (arr[index] === "null") {
-      let leftChildIndex = 2 * index + 1;
-      let rightChildIndex = 2 * index + 2;
-      arr.splice(leftChildIndex, 0, "null");
-      arr.splice(rightChildIndex, 0, "null");
       return null;
     }
-
     let leftChildIndex = 2 * index + 1;
     let rightChildIndex = 2 * index + 2;
+    console.log(
+      arr[index],
+      leftChildIndex,
+      rightChildIndex,
+      arr.length,
+      arr[leftChildIndex],
+      arr[rightChildIndex]
+    );
 
     let root = TreeNode(
       parseInt(arr[index], 10),
